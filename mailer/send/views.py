@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.mail import send_mail
 from django.http import HttpResponse
-from smtplib import SMTPException
+
 
 from send.forms import EmailForm
 
@@ -24,25 +24,25 @@ def send_message(request):
             recipient = cd['recipient']
             # send the email to the recipent
             try:
-                send_mail(subject, message,
-                    from_send,(recipient,))
+                send_mail(subject, message, from_send, (recipient,))
 
                 # set the variable initially created to True
                 messageSent = True
             except Exception as e:
                 type_send = type(from_send)
-                return HttpResponse(f'Error - {e}, fields - {type_send} is {from_send}, {recipient}') # render(request, 'index.html', {
-                   # 'form': form,
-                   # 'messageSent': messageSent,
-                   # }
-                #)
+                return HttpResponse(
+                    f'Error - {e}, fields - {type_send} is {from_send},'
+                    f'{recipient}'
+                )
+
     else:
         form = EmailForm()
 
-    return render(request, 'index.html', {
-
-        'form': form,
-        'messageSent': messageSent,
-
+    return render(
+        request,
+        'index.html',
+        {
+            'form': form,
+            'messageSent': messageSent,
         }
     )
